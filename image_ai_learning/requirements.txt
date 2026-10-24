@@ -1,0 +1,15 @@
+# Core dependencies for image_ai_learning (Verified on Python 3.12, CPU/CUDA)
+# Install inside the project's virtual environment:
+#   pip install -r requirements.txt
+
+numpy>=1.26.0,<3.0.0
+matplotlib>=3.8.0
+pandas>=2.2.0
+Pillow>=10.2.0
+opencv-python-headless>=4.9.0
+scikit-learn>=1.4.0
+torch>=2.2.0
+torchvision>=0.17.0
+ipykernel>=6.29.0
+nbformat>=5.10.0
+nbclient>=0.10.0

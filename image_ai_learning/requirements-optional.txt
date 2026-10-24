@@ -1,0 +1,10 @@
+# Optional dependencies for extended modules (Notebook 17, 19, 21)
+# Install only when needed:
+#   pip install -r requirements-optional.txt
+
+jupyterlab>=4.1.0
+onnx>=1.16.0
+onnxruntime>=1.17.0
+timm>=0.9.16
+albumentations>=1.4.0
+pytesseract>=0.3.10

@@ -1,0 +1,8 @@
+{
+  "quick_run": true,
+  "baseline_test_accuracy": 0.9375,
+  "baseline_test_macro_f1": 0.9374999999999999,
+  "dl_test_accuracy": 0.8958333333333334,
+  "dl_test_macro_f1": 0.8956521739130434,
+  "checkpoint_path": "outputs\\checkpoints\\capstone_residual_cnn_best.pt"
+}
