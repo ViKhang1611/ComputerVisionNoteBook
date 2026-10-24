@@ -1,0 +1,2 @@
+Start jupyter lab
+& "C:\Users\Dell\AppData\Local\Python\pythoncore-3.15-64\Scripts\jupyter-lab.exe"
