@@ -75,7 +75,7 @@ Notebook dùng API OpenCV 4.x. Nếu cần CSRT hoặc các tính năng contrib,
 
 Code dưới đây in phiên bản thực tế, tạo thư mục `cvip_outputs` và định nghĩa hàm hiển thị. Các hình Matplotlib dùng nhãn ngắn tiếng Anh để giảm lỗi font; phần giải thích dùng tiếng Việt.
 """)
-code("""
+
 from pathlib import Path
 import sys
 import cv2
@@ -122,7 +122,7 @@ def save_image(path, img):
     if not ok:
         raise ValueError(f'Không mã hóa được ảnh: {path}')
     buf.tofile(path)
-""")
+
 md(r"""
 <a id="m1"></a>
 ## 1. Getting Started — Hiểu ảnh trước khi xử lý
@@ -142,7 +142,7 @@ Trong mô hình pinhole lý tưởng: $u=f_xX/Z+c_x$, $v=f_yY/Z+c_y$. Vật xa h
 ### Thí nghiệm 1A: pixel, kênh màu, crop và resize
 Quan sát ba hình màu và so sánh các kênh. Vùng đỏ sẽ sáng trong kênh R và tối trong kênh B. ROI lấy bằng slicing có thể là **view**; dùng `.copy()` nếu cần sửa riêng.
 """)
-code("""
+
 scene = np.full((300, 480, 3), 235, np.uint8)
 cv2.rectangle(scene, (25, 40), (155, 175), (0, 0, 220), -1)
 cv2.circle(scene, (265, 105), 65, (0, 180, 0), -1)
@@ -159,7 +159,7 @@ print('shape, dtype:', scene.shape, scene.dtype)
 print('Pixel trong hình đỏ BGR:', scene[70, 60])
 show([('Scene', scene), ('Blue channel', b), ('Red channel', r),
       ('ROI', roi), ('Resized', small), ('Green channel', g)])
-""")
+
 md(r"""
 ### 1.3. Độ sáng, tương phản và kiểu dữ liệu
 Phép biến đổi tuyến tính: $J=\mathrm{clip}(\alpha I+\beta,0,255)$. $\alpha$ thay đổi tương phản, $\beta$ dịch độ sáng. Chuyển sang số thực trước khi tính; cộng trực tiếp trên `uint8` bằng NumPy có thể quay vòng.
@@ -173,7 +173,7 @@ $$C=\alpha F+(1-\alpha)B$$
 
 Alpha 0 là nền, alpha 1 là lớp phủ. Ví dụ kính dưới đây dùng vị trí thiết kế sẵn để học compositing; chưa tự tìm mắt hay khuôn mặt.
 """)
-code("""
+
 linear = np.clip(scene.astype(np.float32) * 1.2 + 20, 0, 255).astype(np.uint8)
 mask = np.zeros(scene.shape[:2], np.uint8)
 cv2.circle(mask, (265, 105), 65, 255, -1)
@@ -195,7 +195,7 @@ print('OpenCV saturating add:', cv2.add(np.array([[250]], np.uint8),
                                           np.array([[20]], np.uint8))[0, 0])
 show([('Brightness / contrast', linear), ('Mask', mask), ('Masked', masked),
       ('Face mockup', face), ('Alpha mask', alpha_mask), ('Sunglasses', glasses)])
-""")
+
 md("""
 **Tự kiểm tra mô-đun 1**
 1. Vì sao pixel đỏ BGR có giá trị lớn ở vị trí thứ ba?
@@ -212,7 +212,7 @@ Video là chuỗi khung hình kèm thông tin thời gian. FPS là số khung h�
 ### Thí nghiệm 2A: ghi và đọc video tự tạo
 Tạo 30 khung ở 15 FPS, dự kiến dài khoảng 2 giây. Cần `isOpened()`, kiểm tra `read()` và luôn `release()`. Codec có thể khác nhau giữa máy nên ví dụ bỏ qua có thông báo nếu encoder không mở được.
 """)
-code("""
+
 frames = []
 for t in range(30):
     frame = np.full((180, 320, 3), 30, np.uint8)
@@ -244,7 +244,7 @@ if written:
 else:
     print('Codec MJPG không khả dụng; vẫn có frames trong bộ nhớ để học.')
 show([('Frame 0', frames[0]), ('Frame 15', frames[15]), ('Frame 29', frames[29])])
-""")
+
 md("""
 ### 2.2. Callback, chuột và bàn phím — ví dụ tùy chọn
 Callback là hàm được gọi khi sự kiện xảy ra. `setMouseCallback` đăng ký hàm xử lý chuột; `waitKey` vừa nhận phím vừa giúp HighGUI xử lý sự kiện.
@@ -291,7 +291,7 @@ Kernel xác định vùng lân cận và tỉ lệ cấu trúc bị tác động
 ### Thí nghiệm 3A: đếm các đồng xu mô phỏng
 Dữ liệu có 4 đĩa tách rời, thêm nhiễu điểm. Đây là minh họa đếm vùng, không xác nhận vật liệu hoặc mệnh giá đồng xu.
 """)
-code("""
+
 coins = np.full((300, 420), 225, np.uint8)
 for x, y, radius in [(75, 75, 35), (200, 85, 45), (335, 90, 30), (200, 220, 42)]:
     cv2.circle(coins, (x, y), radius, 45, -1)
@@ -308,7 +308,7 @@ dilated = cv2.dilate(binary, k)
 closed = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, k)
 show([('Input', coins_noisy), ('Binary', binary), ('Erosion', eroded),
       ('Dilation', dilated), ('Opening', opened), ('Closing', closed)])
-""")
+
 md(r"""
 ### 3.3. Connected components, contour và blob khác nhau ra sao?
 - **Connected components:** gán nhãn mỗi vùng liên thông; nhãn 0 là nền. Connectivity 4 chỉ xét cạnh, 8 xét cả đường chéo.
@@ -319,7 +319,7 @@ md(r"""
 
 **Quan sát:** diện tích contour và số pixel vùng liên thông có thể khác vì định nghĩa đo khác nhau. Khi vật thể chạm nhau, đếm component/contour có thể gộp nhiều vật thành một.
 """)
-code("""
+
 n_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(opened, 8)
 contours, hierarchy = cv2.findContours(opened, cv2.RETR_EXTERNAL,
                                       cv2.CHAIN_APPROX_SIMPLE)
@@ -346,12 +346,11 @@ blob_view = cv2.drawKeypoints(coin_result, keypoints, None, (0, 180, 0),
 print('Components, contours, blobs:', n_labels - 1, len(valid), len(keypoints))
 assert len(valid) == 4, 'Ảnh mô phỏng phải có 4 vùng lớn tách rời.'
 show([('Labeled objects', coin_result), ('Blob detector', blob_view)], cols=2)
-""")
+
 md("""
 ### 3.4. QR detector — bài thực hành mở rộng
 QR có cấu trúc mã hóa và dấu định vị; không nên coi mọi nhóm hình vuông là QR. OpenCV có bộ phát hiện/giải mã sẵn. Ví dụ sau chỉ chạy nếu bạn đặt `qr.png` cùng notebook. Chuỗi rỗng có thể do không tìm được mã hoặc không giải mã được; không chứng minh ảnh chắc chắn không chứa QR.
 """)
-code("""
 qr_path = Path('qr.png')
 if qr_path.is_file():
     qr_image = read_image(qr_path)
@@ -363,7 +362,7 @@ if qr_path.is_file():
     show([('QR detection', qr_image)], cols=1)
 else:
     print('Tùy chọn: thêm qr.png để thử QRCodeDetector.')
-""")
+
 md("""
 **Bài tập mô-đun 3:** cho hai đồng xu chạm nhau và ghi số đếm; thử kernel 3, 7, 15; giải thích vì sao opening có thể xóa vật thể nhỏ. Thêm một lỗ đen vào vật thể trắng để so sánh opening và closing. Muốn tách vật thể chạm nhau có thể nghiên cứu distance transform + watershed; morphology đơn thuần không luôn giải quyết được.
 """)
@@ -378,7 +377,7 @@ Màu chủ đạo có thể ước lượng từ histogram hoặc clustering; k�
 
 ### Thí nghiệm 4A: tách màu đỏ, giảm bão hòa và clustering
 """)
-code("""
+
 hsv = cv2.cvtColor(scene, cv2.COLOR_BGR2HSV)
 red_mask = cv2.bitwise_or(cv2.inRange(hsv, (0, 100, 80), (10, 255, 255)),
                           cv2.inRange(hsv, (170, 100, 80), (179, 255, 255)))
@@ -394,14 +393,14 @@ counts = np.bincount(cluster_ids.ravel(), minlength=4)
 print('Dominant BGR:', centers[counts.argmax()].round().astype(int))
 show([('Red mask', red_mask), ('Selected red', cv2.bitwise_and(scene, scene, mask=red_mask)),
       ('Desaturated', desaturated)])
-""")
+
 md(r"""
 ### 4.2. Histogram equalization, CLAHE và curves
 Histogram đếm tần suất mức sáng. Equalization dùng phân bố tích lũy để phân bố lại mức sáng; không khôi phục được chi tiết đã mất. CLAHE làm tương phản cục bộ và giới hạn khuếch đại để giảm tác động nhiễu.
 
 Với ảnh màu, có thể xử lý kênh độ sáng thay vì equalize độc lập B,G,R để giảm biến đổi màu ngoài ý muốn. Curve là ánh xạ $J=LUT[I]$; ví dụ $J=255(I/255)^\gamma$. Với quy ước này, $\gamma<1$ làm sáng các mức trung gian.
 """)
-code("""
+
 gray_scene = cv2.cvtColor(scene, cv2.COLOR_BGR2GRAY)
 low_contrast = (gray_scene.astype(np.float32) * 0.25 + 80).astype(np.uint8)
 equalized = cv2.equalizeHist(low_contrast)
@@ -416,7 +415,7 @@ for title, img in [('Input', low_contrast), ('Equalized', equalized), ('CLAHE', 
     hist = cv2.calcHist([img], [0], None, [256], [0, 256])
     plt.plot(hist, label=title)
 plt.xlabel('Intensity'); plt.ylabel('Pixel count'); plt.legend(); plt.show()
-""")
+
 md(r"""
 ### 4.3. Convolution và các bộ lọc làm mượt
 Tích chập lý thuyết có lật kernel; `cv2.filter2D` thực hiện **correlation** (không lật kernel). Với kernel đối xứng như trung bình hoặc Gaussian, hai kết quả trùng nhau. Với kernel bất đối xứng cần chú ý quy ước.
@@ -431,7 +430,7 @@ Tích chập lý thuyết có lật kernel; `cv2.filter2D` thực hiện **corre
 ### Thí nghiệm 4B: cùng một ảnh, hai loại nhiễu
 MSE so sánh với ảnh sạch đã biết. Không chỉ xem MSE: ảnh mượt quá mức có thể mất biên hữu ích cho nhiệm vụ sau đó.
 """)
-code("""
+
 clean = gray_scene
 gaussian_noise = np.clip(clean.astype(np.float32) + rng.normal(0, 18, clean.shape),
                           0, 255).astype(np.uint8)
@@ -451,7 +450,7 @@ def mse(a, b):
 for name, img in filtered.items():
     print(name, 'MSE:', round(mse(clean, img), 2))
 show([('Clean', clean), ('Salt / pepper', salt_pepper)] + list(filtered.items()))
-""")
+
 md(r"""
 ### 4.4. Gradient, Canny và sharpening
 Gradient bậc nhất đo thay đổi cường độ theo hướng x,y. Sobel ước lượng $G_x,G_y$; độ lớn $G=\sqrt{G_x^2+G_y^2}$. Laplacian dùng đạo hàm bậc hai. Đạo hàm nhạy với nhiễu nên thường làm mượt trước.
@@ -462,7 +461,7 @@ Unsharp mask: $J=I+k(I-\mathrm{blur}(I))$. Sharpening không khôi phục đư�
 
 **Autofocus minh họa:** variance of Laplacian là một thước đo độ sắc nét thường dùng. So sánh đáng tin hơn khi cảnh, kích thước, phơi sáng và nhiễu tương tự. Đây chưa phải hệ thống điều khiển motor lấy nét.
 """)
-code("""
+
 smooth = cv2.GaussianBlur(gaussian_noise, (5, 5), 1.2)
 gx = cv2.Sobel(smooth, cv2.CV_32F, 1, 0, ksize=3)
 gy = cv2.Sobel(smooth, cv2.CV_32F, 0, 1, ksize=3)
@@ -481,7 +480,7 @@ show([('Noisy', gaussian_noise), ('Smoothed', smooth), ('Gradient', magnitude),
       ('Canny', edges), ('Sharpened', sharp)])
 plt.plot(sigmas, focus_scores, 'o-'); plt.xlabel('Blur sigma')
 plt.ylabel('Variance of Laplacian'); plt.show()
-""")
+
 md("""
 **Bài tập mô-đun 4:** chạy bốn bộ lọc trên `gaussian_noise`, so sánh với trường hợp muối tiêu; tăng Canny low/high threshold; thêm nhiễu mạnh rồi đo focus score để thấy độ sắc nét có thể bị đánh giá sai. Khi báo cáo, giải thích lý do chọn bộ lọc thay vì chỉ đưa ảnh kết quả.
 """)
