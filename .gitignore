@@ -1,3 +1,5 @@
 .jupyter_venv/
 .ipynb_checkpoints/
 **/cvip_outputs/
+Part*/images/
+Part*/outputs_opencv*/
